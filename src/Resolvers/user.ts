@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { RegisterInterface } from "../Interfaces/RegisterInterface";
 import argon from "argon2";
 import { PasswordCheck } from "../Util/PasswordCheck";
-import { LoginInterface } from "src/Interfaces/LoginInterface";
+import { LoginInterface } from "../Interfaces/LoginInterface";
 
 export const createUser = async (data: RegisterInterface) => {
     const id = nanoid();

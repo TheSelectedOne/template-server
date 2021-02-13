@@ -49,7 +49,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         })
             .catch((err) => {
             console.log(err);
-            return;
+            return res.send({ Error: err });
         });
         return res.send(user);
     }));
@@ -66,6 +66,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             .catch((err) => {
             console.log(err);
             res.status(403);
+            res.send({ Error: err });
             return;
         });
         return res.send(user);
