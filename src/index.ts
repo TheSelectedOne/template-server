@@ -6,15 +6,18 @@ import { User } from "./Entities/User";
 import { createUser, loginUser } from "./Resolvers/user";
 import cookieParser from "cookie-parser";
 import { GenerateToken } from "./Util/GenerateToken";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const main = async () => {
     const connection = createConnection({
         type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "postgres",
-        password: "1234",
-        database: "authserver",
+        host: (process.env.DB_HOST as string),
+        port: (<number | undefined>process.env.DB_PORT),
+        username: (process.env.DB_USERNAME as string),
+        password: (process.env.DB_PASSWORD as string),
+        database:(process.env.DB_NAME as string),
         synchronize: true,
         logging: true,
         entities: [User],

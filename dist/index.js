@@ -20,14 +20,16 @@ const User_1 = require("./Entities/User");
 const user_1 = require("./Resolvers/user");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const GenerateToken_1 = require("./Util/GenerateToken");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const connection = typeorm_1.createConnection({
         type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "postgres",
-        password: "1234",
-        database: "authserver",
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         synchronize: true,
         logging: true,
         entities: [User_1.User],
