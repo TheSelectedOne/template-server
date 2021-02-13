@@ -5,10 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VerifyToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const VerifyToken = (token) => {
-    const verify = jsonwebtoken_1.default.verify(token, "string");
+const VerifyToken = (req, res, next) => {
+    if (!req.cookies["token"])
+        throw new Error("User not logged in");
+    const verify = jsonwebtoken_1.default.verify(req.cookies["token"], "string");
     if (verify)
-        return verify;
+        return (res.locals.token = verify,
+            next());
     throw new Error("Something went wrong verifying user");
 };
 exports.VerifyToken = VerifyToken;
