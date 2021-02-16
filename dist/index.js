@@ -44,10 +44,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         yield user_1.loginUser(req.body, res);
     }));
-    app.listen(5000, () => {
+    app.listen(process.env.PORT || 5000, () => {
         console.log("Server is Running");
     });
 });
 main();
-exports.default = main;
 //# sourceMappingURL=index.js.map

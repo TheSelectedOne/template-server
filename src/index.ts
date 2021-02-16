@@ -34,10 +34,9 @@ const main = async () => {
     app.post("/login", async (req: Request, res: Response) => {
         await loginUser(req.body, res)
     });
-    app.listen(5000, () => {
+    app.listen(process.env.PORT || 5000, () => {
         console.log("Server is Running");
     });
 };
 
 main();
-export default main
