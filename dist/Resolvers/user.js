@@ -12,12 +12,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.createUser = void 0;
+exports.loginUser = exports.createUser = exports.filterUsers = exports.getUserBy = exports.getUserById = exports.getAllUsers = void 0;
 const User_1 = require("../Entities/User");
 const nanoid_1 = require("nanoid");
 const argon2_1 = __importDefault(require("argon2"));
 const PasswordCheck_1 = require("../Util/PasswordCheck");
 const GenerateToken_1 = require("../Util/GenerateToken");
+const getAllUsers = (res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield User_1.User.find();
+    if (!users)
+        return res.send({ Error: "No users found" }).status(404).end();
+    return res.send(users).status(200).end();
+});
+exports.getAllUsers = getAllUsers;
+const getUserById = (id, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield User_1.User.findOne(id).then(user => {
+        return user;
+    });
+    if (!user)
+        return res.send({ Error: "User with this id does not exist" }).status(404).end();
+    return res.send(user).status(200).end();
+});
+exports.getUserById = getUserById;
+const getUserBy = (findBy, arg, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield User_1.User.findOne({ where: {
+            [findBy]: arg
+        } });
+    if (!user)
+        return res.send({ Error: `No user found with this ${findBy}` }).status(404).end();
+    return res.send(user).status(200).end();
+});
+exports.getUserBy = getUserBy;
+const filterUsers = (findBy, arg, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield User_1.User.find({ where: {
+            [findBy]: arg
+        } });
+    if (!users)
+        return res.send({ Error: `No users found with this ${findBy}` }).status(404).end();
+    return res.send(users).status(200).end();
+});
+exports.filterUsers = filterUsers;
 const createUser = (data, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = nanoid_1.nanoid();
     const check = PasswordCheck_1.PasswordCheck(data.password, data.confirmPassword);

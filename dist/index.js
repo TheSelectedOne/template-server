@@ -49,4 +49,5 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 main();
+exports.default = main;
 //# sourceMappingURL=index.js.map

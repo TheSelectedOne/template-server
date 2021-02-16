@@ -7,6 +7,36 @@ import { LoginInterface } from "../Interfaces/LoginInterface";
 import { Response } from "express";
 import { GenerateToken } from "../Util/GenerateToken";
 
+export const getAllUsers = async(res: Response) => {
+    const users = await User.find()
+    if(!users) return res.send({Error: "No users found"}).status(404).end()
+    return res.send(users).status(200).end()
+}
+
+export const getUserById = async (id: string, res: Response) => {
+    const user = await User.findOne(id).then(user => {
+        return user
+    })
+    if(!user) return res.send({Error: "User with this id does not exist"}).status(404).end()
+    return res.send(user).status(200).end()
+}
+
+export const getUserBy = async(findBy: string, arg: string ,res: Response) => {
+    const user = await User.findOne({where: {
+        [findBy]:arg
+    }})
+    if(!user) return res.send({Error: `No user found with this ${findBy}`}).status(404).end()
+    return res.send(user).status(200).end()
+}
+
+export const filterUsers = async(findBy: string, arg: string, res: Response) => {
+    const users = await User.find({where:{
+        [findBy]:arg
+    }})
+    if(!users) return res.send({Error: `No users found with this ${findBy}`}).status(404).end()
+    return res.send(users).status(200).end()
+}
+
 export const createUser = async (data: RegisterInterface, res: Response) => {
     const id = nanoid();
     const check = PasswordCheck(data.password, data.confirmPassword);
@@ -43,3 +73,4 @@ export const loginUser = async (data: LoginInterface, res: Response) => {
     });
     return res.send(user).status(200).end();
 };
+
