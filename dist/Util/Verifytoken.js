@@ -12,7 +12,7 @@ const VerifyToken = (req, res, next) => {
     if (verify)
         return (res.locals.token = verify,
             next());
-    throw new Error("Something went wrong verifying user");
+    return res.send({ Error: "Something went wrong verifying user" }).status(501).end();
 };
 exports.VerifyToken = VerifyToken;
 //# sourceMappingURL=VerifyToken.js.map

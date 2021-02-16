@@ -12,11 +12,11 @@ dotenv.config()
 const main = async () => {
     const connection = createConnection({
         type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "postgres",
-        password: "1234",
-        database:"authserver",
+        host: <string>process.env.DB_HOST,
+        port: <number | undefined>process.env.DB_PORT,
+        username: <string>process.env.DB_USERNAME,
+        password: <string>process.env.DB_PASSWORD,
+        database: <string>process.env.DB_NAME,
         synchronize: true,
         logging: true,
         entities: [User],
