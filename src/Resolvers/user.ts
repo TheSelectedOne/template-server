@@ -13,14 +13,6 @@ export const getAllUsers = async(res: Response) => {
     return res.send(users).status(200).end()
 }
 
-export const getUserById = async (id: string, res: Response) => {
-    const user = await User.findOne(id).then(user => {
-        return user
-    })
-    if(!user) return res.send({Error: "User with this id does not exist"}).status(404).end()
-    return res.send(user).status(200).end()
-}
-
 export const getUserBy = async(findBy: string, arg: string ,res: Response) => {
     const user = await User.findOne({where: {
         [findBy]:arg
