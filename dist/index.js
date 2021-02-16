@@ -19,17 +19,16 @@ const express_1 = __importDefault(require("express"));
 const User_1 = require("./Entities/User");
 const user_1 = require("./Resolvers/user");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const GenerateToken_1 = require("./Util/GenerateToken");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const connection = typeorm_1.createConnection({
         type: "postgres",
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
+        host: "localhost",
+        port: 5432,
+        username: "postgres",
+        password: "1234",
+        database: "authserver",
         synchronize: true,
         logging: true,
         entities: [User_1.User],
@@ -40,38 +39,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.use(express_1.default.json());
     app.use(cookie_parser_1.default());
     app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield user_1.createUser(req.body)
-            .then((user) => {
-            console.log(user);
-            const token = GenerateToken_1.GenerateToken(user.id);
-            res.cookie("token", token, {
-                httpOnly: true,
-            });
-            return user;
-        })
-            .catch((err) => {
-            console.log(err);
-            return res.send({ Error: err });
-        });
-        return res.send(user);
+        yield user_1.createUser(req.body, res);
     }));
     app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield user_1.loginUser(req.body)
-            .then((user) => {
-            console.log(user);
-            const token = GenerateToken_1.GenerateToken(user.id);
-            res.cookie("token", token, {
-                httpOnly: true,
-            });
-            return user;
-        })
-            .catch((err) => {
-            console.log(err);
-            res.status(403);
-            res.send({ Error: err });
-            return;
-        });
-        return res.send(user);
+        yield user_1.loginUser(req.body, res);
     }));
     app.listen(5000, () => {
         console.log("Server is Running");

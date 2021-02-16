@@ -17,11 +17,12 @@ const User_1 = require("../Entities/User");
 const nanoid_1 = require("nanoid");
 const argon2_1 = __importDefault(require("argon2"));
 const PasswordCheck_1 = require("../Util/PasswordCheck");
-const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
+const GenerateToken_1 = require("../Util/GenerateToken");
+const createUser = (data, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = nanoid_1.nanoid();
     const check = PasswordCheck_1.PasswordCheck(data.password, data.confirmPassword);
-    if (!check)
-        throw new Error("Password Error");
+    if (check !== true)
+        return res.send({ Error: check }).status(401).end();
     const password = yield argon2_1.default.hash(data.password);
     const user = User_1.User.create({
         id: id,
@@ -29,21 +30,32 @@ const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
         password: password,
         verified: false,
     });
-    return user.save();
+    const token = GenerateToken_1.GenerateToken(user.id);
+    res.cookie("token", token, {
+        httpOnly: true,
+    });
+    yield user.save().catch(err => {
+        return res.send({ Error: err }).status(500).end();
+    });
+    return res.send(user).status(200).end();
 });
 exports.createUser = createUser;
-const loginUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
+const loginUser = (data, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield User_1.User.findOne({
         where: {
             email: data.email,
         },
     });
     if (!user)
-        throw new Error("User does not exist");
+        return res.send({ Error: "No account with this email" }).status(400).end();
     const pw = yield argon2_1.default.verify(user.password, data.password);
     if (!pw)
-        throw new Error("Wrong Password");
-    return user;
+        return res.send({ Error: "Wrong Password" }).status(403).end();
+    const token = GenerateToken_1.GenerateToken(user.id);
+    res.cookie("token", token, {
+        httpOnly: true,
+    });
+    return res.send(user).status(200).end();
 });
 exports.loginUser = loginUser;
 //# sourceMappingURL=user.js.map

@@ -15,4 +15,4 @@ const VerifyToken = (req, res, next) => {
     throw new Error("Something went wrong verifying user");
 };
 exports.VerifyToken = VerifyToken;
-//# sourceMappingURL=Verifytoken.js.map
+//# sourceMappingURL=VerifyToken.js.map
